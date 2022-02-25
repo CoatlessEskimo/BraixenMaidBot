@@ -31,7 +31,7 @@ agplNotice = "FennecBot, a project that will eventually be forked into Free6\nCo
 @bot.command(name='helppls', aliases=['man', '?'])
 async def helppls(message):
     # Send the help message
-    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.A)\n\nCommands:\n\n#!man - shows the manual/manpage.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n\nDiscord is cringe and will be forcing all bots to use slash commands in the coming months if they are in 75 or more servers.\nUse #!info for more information.\n```")
+    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.A)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
 
 # Gives the user the main source code for the application.
 @bot.command(name='sourceCode', aliases=['source'])
@@ -44,10 +44,9 @@ async def sourceCode(ctx):
 async def agplNoticeDisplay(message):
     await message.channel.send(f"```\n{agplNotice}\n```")
 
-# Gives information on the bot API update
-@bot.command(name='infoDiscord', aliases=['info'])
-async def infoDiscord(ctx):
-    await ctx.send("go pester ali and tell her to fill this info page okie thanks")
+@bot.command(name='githubSource', aliases=["github"])
+async def githubSource(message):
+    await message.channel.send(f"{message.author.mention} https://github.com/CoatlessEskimo/FennecBot")
 
 # Lists debug commands
 @bot.command(name='debugInfo', aliases=['debug'])
