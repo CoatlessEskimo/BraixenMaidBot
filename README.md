@@ -35,6 +35,7 @@ An NSFW link filter is included that only applies outside of NSFW channels. This
 `#!agpl` - Shows the GNU AGPL v3 notice.
 
 `#!toggleNSFW` - Turns the NSFW filter on and off per server.
+`#!addNSFW <arg>` - Creates a server specific list of nsfw links to be filtered, and adds argument to the list.
 `#!toggleYT` - Turns off the YouTube Shorts filter per server.
 
 `#!init` - Checks to see if required files are present, and creates them if they're not. (PENDING REMOVAL.)

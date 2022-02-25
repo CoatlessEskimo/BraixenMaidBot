@@ -32,7 +32,7 @@ agplNotice = "FennecBot, a project that will eventually be forked into Free6\nCo
 @bot.command(name='helppls', aliases=['man', '?'])
 async def helppls(message):
     # Send the help message
-    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.A)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
+    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.C)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!addNSFW - creates a server specific list of links to be filtered if it does not already exists, and adds the argument to the list\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
 
 # Gives the user the main source code for the application.
 @bot.command(name='sourceCode', aliases=['source'])
@@ -65,27 +65,28 @@ async def debugInfo(ctx):
 async def addNSFWLink(ctx, *, arg):
     customList = f'customLists/{ctx.guild.id}-NSFW.txt'
     addLink = f'{arg}'
-    print(ctx.guild.id)
-    print(customList)
-    if os.path.exists(customList):
-        pass
+    if ctx.message.author.guild_permissions.administrator:
+        if os.path.exists(customList):
+            pass
+        else:
+            await ctx.send("Custom NSFW list does not exist for this server.")
+            try:
+                await ctx.send("Trying to create...")
+                open(customList, 'a').close()
+            except OSError:
+                await ctx.send("Couldn't create list.")
+            else:
+                await ctx.send("Created list!")
+        with open(customList, 'r') as file:
+            if not f"{arg}" in file.read():
+                with open(customList, 'a') as file:
+                    file.write(f"{arg}\n")
+                    await ctx.send("Added word to list!")
+            else:
+                await ctx.send("This word is already in the list!")
+                return
     else:
-        await ctx.send("Custom NSFW list does not exist for this server.")
-        try:
-            await ctx.send("Trying to create...")
-            open(customList, 'a').close()
-        except OSError:
-            await ctx.send("Couldn't create list.")
-        else:
-            await ctx.send("Created list!")
-    with open(customList, 'r') as file:
-        if not f"{arg}" in file.read():
-            with open(customList, 'a') as file:
-                file.write(f"{arg}\n")
-                await ctx.send("Added word to list!")
-        else:
-            await ctx.send("This word is already in the list!")
-            return
+        await ctx.send("You don't have permission to do that.")
             
 @bot.command(name='toggleFilterNSFW', aliases=['toggleNSFW'])
 async def toggleFilterNSFW(message):
@@ -194,11 +195,16 @@ async def on_message(message):
             await message.channel.send(f"From {message.author.mention} {newestLink}") # Mention the user with an updated link
             
     with open('nsfwfilter-disabled.txt', 'r') as file:
+        customList = f'customLists/{message.guild.id}-NSFW.txt'
         nsfwServers = file.read()
         if f"{message.guild.id}" in nsfwServers or message.channel.is_nsfw():
             return
         with open("nsfwlinks.txt", "r") as linklist:
-            links = linklist.read().splitlines()
+            if os.path.exists(customList):
+                with open(customList, "r") as otherlinklist:
+                    links = linklist.read().splitlines() + otherlinklist.read().splitlines()
+            else:
+                links = linklist.read().splitlines()
             for word in links: # NSFW Handling
                 if word in message.content:
                     randomIPLinks = [ # A list of IP grabber memes to choose from
