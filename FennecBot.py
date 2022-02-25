@@ -19,7 +19,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 # Manual commands use the prefix #!
 bot = commands.Bot(command_prefix='#!')
 
-agplNotice = "```\nFennecBot, a project that will eventually be forked into Free6\nCopyright (C) 2022  Kenneth Davis\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU Affero General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU Affero General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License\nalong with this program.  If not, see <https://www.gnu.org/licenses/>.\n```"
+agplNotice = "FennecBot, a project that will eventually be forked into Free6\nCopyright (C) 2022  Kenneth Davis\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU Affero General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU Affero General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License\nalong with this program.  If not, see <https://www.gnu.org/licenses/>."
 
 ##
 ##
@@ -31,7 +31,7 @@ agplNotice = "```\nFennecBot, a project that will eventually be forked into Free
 @bot.command(name='helppls', aliases=['man', '?'])
 async def helppls(message):
     # Send the help message
-    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.24.C)\n\nCommands:\n\n#!man - shows the manual/manpage.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n\nDiscord is cringe and will be forcing all bots to use slash commands in the coming months if they are in 75 or more servers.\nUse #!info for more information.\n```")
+    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.A)\n\nCommands:\n\n#!man - shows the manual/manpage.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n\nDiscord is cringe and will be forcing all bots to use slash commands in the coming months if they are in 75 or more servers.\nUse #!info for more information.\n```")
 
 # Gives the user the main source code for the application.
 @bot.command(name='sourceCode', aliases=['source'])
@@ -42,7 +42,7 @@ async def sourceCode(ctx):
 
 @bot.command(name='agplNoticeDisplay', aliases=["agpl"])
 async def agplNoticeDisplay(message):
-    await message.channel.send(f"{agplNotice}")
+    await message.channel.send(f"```\n{agplNotice}\n```")
 
 # Gives information on the bot API update
 @bot.command(name='infoDiscord', aliases=['info'])
@@ -219,12 +219,12 @@ async def initialize(message):
             currentFile = "ytfilter-disabled.txt"
         elif fileNumber == 3:
             currentFile = "nsfwlinks.txt"
-        if os.path.exists(currentList):
+        if os.path.exists(currentFile):
             await message.channel.send(f"{currentFile} already exists! Skipping...")
             #pass
         else:
             try:
-                open(currentList, 'a').close()
+                open(currentFile, 'a').close()
             except OSError:
                 await message.channel.send(f"Failed to create file {currentFile}! Ask host to check permissions...")
                 return
@@ -233,7 +233,31 @@ async def initialize(message):
 
 @bot.event
 async def on_ready():
+    # Show GPL Notice
     print(f"{agplNotice}")
+    # New Line
+    print("\n")
+    # File System Check that occurs automatically
+    fileNumber = 0
+    for repeat_count in range(3):
+        fileNumber += 1
+        if fileNumber == 1:
+            currentFile = "nsfwfilter-disabled.txt"
+        elif fileNumber == 2:
+            currentFile = "ytfilter-disabled.txt"
+        elif fileNumber == 3:
+            currentFile = "nsfwlinks.txt"
+        if os.path.exists(currentFile):
+            print(f"{currentFile} found")
+            #pass
+        else:
+            try:
+                open(currentFile, 'a').close()
+            except OSError:
+                print(f"Failed to create file {currentFile}")
+                return
+            else:
+                print(f"Created file {currentFile}")
     games = [
         "Persona 2: Innocent Sin",
         "GUILTY GEAR XX ACCENT CORE PLUS R",
