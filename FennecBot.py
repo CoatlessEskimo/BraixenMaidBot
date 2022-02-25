@@ -8,6 +8,7 @@
 import os 
 import random
 import discord
+import hashlib
 
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -36,7 +37,7 @@ async def helppls(message):
 # Gives the user the main source code for the application.
 @bot.command(name='sourceCode', aliases=['source'])
 async def sourceCode(ctx):
-    await ctx.send(file=discord.File('README.MD'))
+    await ctx.send(file=discord.File('README.md'))
     await ctx.send(file=discord.File('COPYING'))
     await ctx.send(file=discord.File('FennecBot.py'))
 
@@ -60,6 +61,32 @@ async def debugInfo(ctx):
 ##
 
 # the nsfw filter command, and the beginning of the spaghetti
+@bot.command(name='addNSFWLink', aliases=['addNSFW'])
+async def addNSFWLink(ctx, *, arg):
+    customList = f'customLists/{ctx.guild.id}-NSFW.txt'
+    addLink = f'{arg}'
+    print(ctx.guild.id)
+    print(customList)
+    if os.path.exists(customList):
+        pass
+    else:
+        await ctx.send("Custom NSFW list does not exist for this server.")
+        try:
+            await ctx.send("Trying to create...")
+            open(customList, 'a').close()
+        except OSError:
+            await ctx.send("Couldn't create list.")
+        else:
+            await ctx.send("Created list!")
+    with open(customList, 'r') as file:
+        if not f"{arg}" in file.read():
+            with open(customList, 'a') as file:
+                file.write(f"{arg}\n")
+                await ctx.send("Added word to list!")
+        else:
+            await ctx.send("This word is already in the list!")
+            return
+            
 @bot.command(name='toggleFilterNSFW', aliases=['toggleNSFW'])
 async def toggleFilterNSFW(message):
     if message.author.guild_permissions.administrator:
@@ -154,6 +181,7 @@ async def on_message(message):
         await message.channel.send(f"{random.choice(braixPhrases)}")
     if "obama" in message.content.lower():
         await message.channel.send(f"{message.author.mention} obama")
+    
     with open('ytfilter-disabled.txt', 'r') as file:
         ytServers = file.read()
         if f"{message.guild.id}" in ytServers:
@@ -164,10 +192,10 @@ async def on_message(message):
             newestLink = newLink.replace('?feature=share', '')
             await message.delete() # Delete the message
             await message.channel.send(f"From {message.author.mention} {newestLink}") # Mention the user with an updated link
+            
     with open('nsfwfilter-disabled.txt', 'r') as file:
         nsfwServers = file.read()
         if f"{message.guild.id}" in nsfwServers or message.channel.is_nsfw():
-            #print("NSFW Filter Disabled") # Debug function
             return
         with open("nsfwlinks.txt", "r") as linklist:
             links = linklist.read().splitlines()
@@ -178,12 +206,8 @@ async def on_message(message):
                         'https://cdn.discordapp.com/attachments/848668986258489354/935383696108838942/ip-potato-quality.mp4',
                         'https://cdn.discordapp.com/attachments/850585083652210748/935548361648517251/captain-underpants-ip-address.mp4'
                     ]
-                    #randomIPLink = random.choice(randomIPLinks) # Pick a random IP grabber
                     await message.delete() # Delete the user's message
-                    #funneTag = message.author.mention
                     await message.channel.send(f"{message.author.mention} {random.choice(randomIPLinks)}") # Ping them with an IP grabber meme
-                    #print(f"{links}") # For debugging
-
 ##
 ##
 ## DEBUG COMMANDS
