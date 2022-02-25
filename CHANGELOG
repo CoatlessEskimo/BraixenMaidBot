@@ -11,3 +11,8 @@ Todo:
 - Fixed GPL notices
 - Added automatic file system check
 - Fixed #!init
+
+2022.02.25.B
+
+- Updated README
+- Added check for a directory containing a custom set of lists per server

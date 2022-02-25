@@ -91,12 +91,6 @@ async def toggleFilterNSFW(message):
     else:
         await message.channel.send(f"You don't have permissions for that, {message.author.mention}!")
 
-# Debug Function for checking the filter status through console output
-@bot.command(name='checkFilterNSFW', aliases=['checkNSFW'])
-async def checkFilterNSFW(message):
-    with open('nsfwfilter-disabled.txt', 'r') as file:
-        print(file.read())
-
 # Toggles the YouTube Shorts formatter
 @bot.command(name='toggleFilterYT', aliases=['toggleYT'])
 async def toggleFilterNSFW(message):
@@ -128,11 +122,6 @@ async def toggleFilterNSFW(message):
                     await message.channel.send("YT Formatter has been enabled!")
     else:
         await message.channel.send(f"You don't have permissions for that, {message.author.mention}!")
-
-#@bot.command(name='viewFilterYouTubeShorts', aliases=['viewYT'])
-#async def viewFilterYouTubeShorts(message):
-#    with open('ytfilter-disabled.txt', 'r') as file:
-#        print(file.read())
 
 @bot.command(name='dragoninstall', aliases=['214214H', '214214S', 'sakkai', '632146S'])
 async def dragoninstall(ctx):
@@ -257,6 +246,23 @@ async def on_ready():
                 return
             else:
                 print(f"Created file {currentFile}")
+        if os.path.exists("customLists"):
+            if os.path.isfile("customLists"):
+                print("File found where directory should be")
+                os.remove("customLists")
+                try:
+                    os.mkdir("customLists")
+                except OSError:
+                    print("Failed to create custom list directory")
+                else:
+                    print("Created directory")
+            elif os.path.isdir("customLists"):
+                print("Found custom lists directory")
+        else:
+            try:
+                os.mkdir("customLists")
+            except OSError:
+                print("Failed to create custom list directory")
     games = [
         "Persona 2: Innocent Sin",
         "GUILTY GEAR XX ACCENT CORE PLUS R",
