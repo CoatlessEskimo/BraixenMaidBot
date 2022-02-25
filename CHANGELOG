@@ -16,3 +16,7 @@ Todo:
 
 - Updated README
 - Added check for a directory containing a custom set of lists per server
+
+2022.02.25.C
+
+- Added #!addNSFW, which allows per server nsfw filtering
