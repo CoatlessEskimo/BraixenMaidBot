@@ -6,12 +6,14 @@ You should have received a copy of the GNU Affero General Public License along w
 
 For this bot to work correctly, you need to create a file in the same directory, called ".env", and it must contain the following text:
 
+```
 # .env
 DISCORD_TOKEN=yourdiscordtokengoeshere
+```
 
-If you want to avoid a headache while I finish up the file checks, go ahead and make sure to make the following files:
+If you want to avoid a headache while I finish up the file checks, go ahead and make sure to make the following files exist and are rw:
 nsfwfilter-disabled.txt
 ytfilter-disabled.txt
 nsfwlinks.txt (fill this with your list of banned nsfw links)
 
-Make sure to also include LICENSE.TXT, as it later will be a copy of the Affero GPL v3, and also include README.MD, with any modifications you like.
+Make sure to also include the attached GNU Affero General Public License v3, and also include README.md, with any modifications you like.

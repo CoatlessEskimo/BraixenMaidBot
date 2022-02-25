@@ -1,0 +1,6 @@
+Todo:
+
+- Add Slur/Profanity Filter
+- Custom Profanity List
+- Fix up the README
+- Actually add the #!init command and make it run at boot
