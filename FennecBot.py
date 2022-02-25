@@ -32,7 +32,7 @@ agplNotice = "FennecBot, a project that will eventually be forked into Free6\nCo
 @bot.command(name='helppls', aliases=['man', '?'])
 async def helppls(message):
     # Send the help message
-    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.C)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!addNSFW - creates a server specific list of links to be filtered if it does not already exists, and adds the argument to the list\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
+    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.D)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!addNSFW <arg> - creates a server specific list of links to be filtered if it does not already exists, and adds the argument to the list\n#!addBadWord <arg> - Creates a server specific list of words/links not allowed to be said in any channel, and adds argument to the list.\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
 
 # Gives the user the main source code for the application.
 @bot.command(name='sourceCode', aliases=['source'])
@@ -81,13 +81,40 @@ async def addNSFWLink(ctx, *, arg):
             if not f"{arg}" in file.read():
                 with open(customList, 'a') as file:
                     file.write(f"{arg}\n")
-                    await ctx.send("Added word to list!")
+                    await ctx.send("Added link/word to list!")
             else:
-                await ctx.send("This word is already in the list!")
+                await ctx.send("This link/word is already in the list!")
                 return
     else:
         await ctx.send("You don't have permission to do that.")
-            
+
+@bot.command(name='addBadWord')
+async def addBadWord(ctx, *, arg):
+    customList = f'customLists/{ctx.guild.id}-GLOBAL.txt'
+    addLink = f'{arg}'
+    if ctx.message.author.guild_permissions.administrator:
+        if os.path.exists(customList):
+            pass
+        else:
+            await ctx.send("Custom banned link/word list does not exist for this server.")
+            try:
+                await ctx.send("Trying to create...")
+                open(customList, 'a').close()
+            except OSError:
+                await ctx.send("Couldn't create list.")
+            else:
+                await ctx.send("Created list!")
+        with open(customList, 'r') as file:
+            if not f"{arg}" in file.read():
+                with open(customList, 'a') as file:
+                    file.write(f"{arg}\n")
+                    await ctx.send("Added link/word to list!")
+            else:
+                await ctx.send("This link/word is already in the list!")
+                return
+    else:
+        await ctx.send("You don't have permission to do that.")
+
 @bot.command(name='toggleFilterNSFW', aliases=['toggleNSFW'])
 async def toggleFilterNSFW(message):
     if message.author.guild_permissions.administrator:
@@ -214,6 +241,19 @@ async def on_message(message):
                     ]
                     await message.delete() # Delete the user's message
                     await message.channel.send(f"{message.author.mention} {random.choice(randomIPLinks)}") # Ping them with an IP grabber meme
+
+    with open('bannedwords.txt', 'r') as file:
+            customList = f'customLists/{message.guild.id}-GLOBAL.txt'
+            with open("bannedwords.txt", "r") as linklist:
+                if os.path.exists(customList):
+                    with open(customList, "r") as otherlinklist:
+                        links = linklist.read().splitlines() + otherlinklist.read().splitlines()
+                else:
+                    links = linklist.read().splitlines()
+                for word in links:
+                    if word in message.content:
+                        await message.delete() # Delete the user's message
+                        await message.channel.send(f"{message.author.mention} you aren't allowed to say that.")
 ##
 ##
 ## DEBUG COMMANDS
@@ -257,7 +297,7 @@ async def on_ready():
     print("\n")
     # File System Check that occurs automatically
     fileNumber = 0
-    for repeat_count in range(3):
+    for repeat_count in range(4):
         fileNumber += 1
         if fileNumber == 1:
             currentFile = "nsfwfilter-disabled.txt"
@@ -265,6 +305,8 @@ async def on_ready():
             currentFile = "ytfilter-disabled.txt"
         elif fileNumber == 3:
             currentFile = "nsfwlinks.txt"
+        elif fileNumber == 4:
+            currentFile = "bannedwords.txt"
         if os.path.exists(currentFile):
             print(f"{currentFile} found")
             #pass

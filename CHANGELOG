@@ -20,3 +20,8 @@ Todo:
 2022.02.25.C
 
 - Added #!addNSFW, which allows per server nsfw filtering
+
+2022.02.25.D
+
+- Added a global and server specific banned words list that works in all channels
+- Added #!addBadWord, which allows per server word filtering
