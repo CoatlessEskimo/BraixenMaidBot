@@ -1,7 +1,7 @@
-#FennecBot
-###The project that will eventually be turned into Free6
+# FennecBot
+### The project that will eventually be turned into Free6
 
-##Instructions
+## Instructions
 For this bot to work correctly, you need to create a file in the same directory, called ".env", and it must contain the following text:
 
 ```
