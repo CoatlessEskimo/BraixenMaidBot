@@ -32,7 +32,7 @@ agplNotice = "FennecBot, a project that will eventually be forked into Free6\nCo
 @bot.command(name='helppls', aliases=['man', '?'])
 async def helppls(message):
     # Send the help message
-    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.D)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!addNSFW <arg> - creates a server specific list of links to be filtered if it does not already exists, and adds the argument to the list\n#!addBadWord <arg> - Creates a server specific list of words/links not allowed to be said in any channel, and adds argument to the list.\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
+    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.E)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!addNSFW <arg> - creates a server specific list of links to be filtered if it does not already exists, and adds the argument to the list\n#!rmNSFW <arg> - removes argument from above list\n#!addBadWord <arg> - Creates a server specific list of words/links not allowed to be said in any channel, and adds argument to the list.\n#!rmBadWord <arg> - Removes argument from above list\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
 
 # Gives the user the main source code for the application.
 @bot.command(name='sourceCode', aliases=['source'])
@@ -88,6 +88,25 @@ async def addNSFWLink(ctx, *, arg):
     else:
         await ctx.send("You don't have permission to do that.")
 
+@bot.command(name='removeNSFWLink', aliases=['rmNSFW'])
+async def removeBadWord(ctx, *, arg):
+    customList = f'customLists/{ctx.guild.id}-NSFW.txt'
+    print(customList)
+    if ctx.message.author.guild_permissions.administrator:
+        if os.path.exists(customList):
+            pass
+        else:
+            ctx.send("You don't have a custom NSFW link list yet. Add a link to begin.")
+            return
+        with open(customList, 'r+') as file:
+            newCustomList = file.read().replace(f'{arg}\n', '')
+            print(newCustomList)
+            file.seek(0)
+            file.write(newCustomList)
+            file.truncate()
+            print(f"Removed link/word from list.")
+            await ctx.send("Removed link/word from list.")
+
 @bot.command(name='addBadWord')
 async def addBadWord(ctx, *, arg):
     customList = f'customLists/{ctx.guild.id}-GLOBAL.txt'
@@ -114,6 +133,25 @@ async def addBadWord(ctx, *, arg):
                 return
     else:
         await ctx.send("You don't have permission to do that.")
+
+@bot.command(name='removeBadWord', aliases=['rmBadWord'])
+async def removeBadWord(ctx, *, arg):
+    customList = f'customLists/{ctx.guild.id}-GLOBAL.txt'
+    print(customList)
+    if ctx.message.author.guild_permissions.administrator:
+        if os.path.exists(customList):
+            pass
+        else:
+            ctx.send("You don't have a custom banned word/link list yet. Add a word/link to begin.")
+            return
+        with open(customList, 'r+') as file:
+            newCustomList = file.read().replace(f'{arg}\n', '')
+            print(newCustomList)
+            file.seek(0)
+            file.write(newCustomList)
+            file.truncate()
+            print(f"Removed link/word from list.")
+            await ctx.send("Removed link/word from list.")
 
 @bot.command(name='toggleFilterNSFW', aliases=['toggleNSFW'])
 async def toggleFilterNSFW(message):

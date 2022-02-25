@@ -25,3 +25,7 @@ Todo:
 
 - Added a global and server specific banned words list that works in all channels
 - Added #!addBadWord, which allows per server word filtering
+
+2022.02.25.E
+
+- Added #!rmBadWord and #!rmNSFW for removing links from filtering

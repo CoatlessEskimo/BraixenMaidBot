@@ -36,7 +36,9 @@ An NSFW link filter is included that only applies outside of NSFW channels. This
 
 `#!toggleNSFW` - Turns the NSFW filter on and off per server.
 `#!addNSFW <arg>` - Creates a server specific list of nsfw links to be filtered, and adds argument to the list.
+`#!rmNSFW <arg>` - Removes argument from above list
 `#!addBadWord <arg>` - Creates a server specific list of words/links not allowed to be said in any channel, and adds argument to the list.
+`#!rmBadWord <arg>` - Removes argument from above list
 `#!toggleYT` - Turns off the YouTube Shorts filter per server.
 
 
