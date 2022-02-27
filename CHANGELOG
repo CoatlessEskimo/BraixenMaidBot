@@ -1,6 +1,7 @@
 Todo:
 
 - Remove the #!init command as it's really not necessary
+- Consider changing bot NSFW filter behavior to send meme, and then DM the user explaining what they did wrong. Or maybe just DM them a fake IP address. Idk. It'd be funny.
 
 2022.02.25.A
 
@@ -30,3 +31,8 @@ Todo:
 2022.02.26.A
 
 - Fixed a crippling bug that prevents the bad word filter from working if the nsfw filter is off
+
+2022.02.26.B
+
+- Merged first PR to inform user of what bad word they said
+- Handled 403 exception
