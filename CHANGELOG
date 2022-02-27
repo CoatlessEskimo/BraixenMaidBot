@@ -26,3 +26,7 @@ Todo:
 2022.02.25.E
 
 - Added #!rmBadWord and #!rmNSFW for removing links from filtering
+
+2022.02.26.A
+
+- Fixed a crippling bug that prevents the bad word filter from working if the nsfw filter is off

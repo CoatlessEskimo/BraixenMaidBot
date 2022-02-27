@@ -32,7 +32,7 @@ agplNotice = "FennecBot, a project that will eventually be forked into Free6\nCo
 @bot.command(name='helppls', aliases=['man', '?'])
 async def helppls(message):
     # Send the help message
-    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.25.E)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!addNSFW <arg> - creates a server specific list of links to be filtered if it does not already exists, and adds the argument to the list\n#!rmNSFW <arg> - removes argument from above list\n#!addBadWord <arg> - Creates a server specific list of words/links not allowed to be said in any channel, and adds argument to the list.\n#!rmBadWord <arg> - Removes argument from above list\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
+    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.26.A)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!addNSFW <arg> - creates a server specific list of links to be filtered if it does not already exists, and adds the argument to the list\n#!rmNSFW <arg> - removes argument from above list\n#!addBadWord <arg> - Creates a server specific list of words/links not allowed to be said in any channel, and adds argument to the list.\n#!rmBadWord <arg> - Removes argument from above list\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
 
 # Gives the user the main source code for the application.
 @bot.command(name='sourceCode', aliases=['source'])
@@ -91,7 +91,6 @@ async def addNSFWLink(ctx, *, arg):
 @bot.command(name='removeNSFWLink', aliases=['rmNSFW'])
 async def removeBadWord(ctx, *, arg):
     customList = f'customLists/{ctx.guild.id}-NSFW.txt'
-    print(customList)
     if ctx.message.author.guild_permissions.administrator:
         if os.path.exists(customList):
             pass
@@ -100,11 +99,9 @@ async def removeBadWord(ctx, *, arg):
             return
         with open(customList, 'r+') as file:
             newCustomList = file.read().replace(f'{arg}\n', '')
-            print(newCustomList)
             file.seek(0)
             file.write(newCustomList)
             file.truncate()
-            print(f"Removed link/word from list.")
             await ctx.send("Removed link/word from list.")
 
 @bot.command(name='addBadWord')
@@ -137,7 +134,6 @@ async def addBadWord(ctx, *, arg):
 @bot.command(name='removeBadWord', aliases=['rmBadWord'])
 async def removeBadWord(ctx, *, arg):
     customList = f'customLists/{ctx.guild.id}-GLOBAL.txt'
-    print(customList)
     if ctx.message.author.guild_permissions.administrator:
         if os.path.exists(customList):
             pass
@@ -146,11 +142,9 @@ async def removeBadWord(ctx, *, arg):
             return
         with open(customList, 'r+') as file:
             newCustomList = file.read().replace(f'{arg}\n', '')
-            print(newCustomList)
             file.seek(0)
             file.write(newCustomList)
             file.truncate()
-            print(f"Removed link/word from list.")
             await ctx.send("Removed link/word from list.")
 
 @bot.command(name='toggleFilterNSFW', aliases=['toggleNSFW'])
@@ -172,14 +166,14 @@ async def toggleFilterNSFW(message):
             if not f"{message.guild.id}" in nsfwServers:
                 with open('nsfwfilter-disabled.txt', 'a') as file:
                     file.write(f"{message.guild.id}\n")
-                    print(f"Added {message.guild.id} to the list of servers that are free of nsfw scanning.")
+                    #print(f"Added {message.guild.id} to the list of servers that are free of nsfw scanning.")
                     await message.channel.send("NSFW Filter has been disabled!")
                 return
             elif f"{message.guild.id}" in nsfwServers:
                 with open('nsfwfilter-disabled.txt', 'w') as file:
                     newNSFWServers = nsfwServers.replace(f'{message.guild.id}\n', '')
                     file.write(f"{newNSFWServers}")
-                    print(f"Removed {message.guild.id} from the list of scan-free servers.")
+                    #print(f"Removed {message.guild.id} from the list of scan-free servers.")
                     await message.channel.send("NSFW Filter has been enabled!")
     else:
         await message.channel.send(f"You don't have permissions for that, {message.author.mention}!")
@@ -204,14 +198,14 @@ async def toggleFilterNSFW(message):
             if not f"{message.guild.id}" in ytServers:
                 with open('ytfilter-disabled.txt', 'a') as file:
                     file.write(f"{message.guild.id}\n")
-                    print(f"Added {message.guild.id} to the list of servers that are free of yt scanning.")
+                    #print(f"Added {message.guild.id} to the list of servers that are free of yt scanning.")
                     await message.channel.send("YT Formatter has been disabled!")
                 return
             elif f"{message.guild.id}" in ytServers:
                 with open('ytfilter-disabled.txt', 'w') as file:
                     newYTServers = ytServers.replace(f'{message.guild.id}\n', '')
                     file.write(f"{newYTServers}")
-                    print(f"Removed {message.guild.id} from the list of YT scan-free servers.")
+                    #print(f"Removed {message.guild.id} from the list of YT scan-free servers.")
                     await message.channel.send("YT Formatter has been enabled!")
     else:
         await message.channel.send(f"You don't have permissions for that, {message.author.mention}!")
@@ -251,7 +245,7 @@ async def on_message(message):
     with open('ytfilter-disabled.txt', 'r') as file:
         ytServers = file.read()
         if f"{message.guild.id}" in ytServers:
-            print("filter disabled")
+            #print("filter disabled")
             return
         if "youtube.com/shorts/" in message.content: # Shorts handling
             newLink = message.content.replace('shorts/', 'watch?v=')
@@ -263,22 +257,23 @@ async def on_message(message):
         customList = f'customLists/{message.guild.id}-NSFW.txt'
         nsfwServers = file.read()
         if f"{message.guild.id}" in nsfwServers or message.channel.is_nsfw():
-            return
-        with open("nsfwlinks.txt", "r") as linklist:
-            if os.path.exists(customList):
-                with open(customList, "r") as otherlinklist:
-                    links = linklist.read().splitlines() + otherlinklist.read().splitlines()
-            else:
-                links = linklist.read().splitlines()
-            for word in links: # NSFW Handling
-                if word in message.content:
-                    randomIPLinks = [ # A list of IP grabber memes to choose from
-                        'https://cdn.discordapp.com/attachments/848668986258489354/935382738679263262/neco-arc-ip-address.mp4',
-                        'https://cdn.discordapp.com/attachments/848668986258489354/935383696108838942/ip-potato-quality.mp4',
-                        'https://cdn.discordapp.com/attachments/850585083652210748/935548361648517251/captain-underpants-ip-address.mp4'
-                    ]
-                    await message.delete() # Delete the user's message
-                    await message.channel.send(f"{message.author.mention} {random.choice(randomIPLinks)}") # Ping them with an IP grabber meme
+            pass
+        else:
+            with open("nsfwlinks.txt", "r") as linklist:
+                if os.path.exists(customList):
+                    with open(customList, "r") as otherlinklist:
+                        links = linklist.read().splitlines() + otherlinklist.read().splitlines()
+                else:
+                    links = linklist.read().splitlines()
+                for word in links: # NSFW Handling
+                    if word in message.content:
+                        randomIPLinks = [ # A list of IP grabber memes to choose from
+                            'https://cdn.discordapp.com/attachments/848668986258489354/935382738679263262/neco-arc-ip-address.mp4',
+                            'https://cdn.discordapp.com/attachments/848668986258489354/935383696108838942/ip-potato-quality.mp4',
+                            'https://cdn.discordapp.com/attachments/850585083652210748/935548361648517251/captain-underpants-ip-address.mp4'
+                        ]
+                        await message.delete() # Delete the user's message
+                        await message.channel.send(f"{message.author.mention} {random.choice(randomIPLinks)}") # Ping them with an IP grabber meme
 
     with open('bannedwords.txt', 'r') as file:
             customList = f'customLists/{message.guild.id}-GLOBAL.txt'
@@ -330,9 +325,7 @@ async def initialize(message):
 @bot.event
 async def on_ready():
     # Show GPL Notice
-    print(f"{agplNotice}")
-    # New Line
-    print("\n")
+    print(f"{agplNotice}\n")
     # File System Check that occurs automatically
     fileNumber = 0
     for repeat_count in range(4):
@@ -346,33 +339,38 @@ async def on_ready():
         elif fileNumber == 4:
             currentFile = "bannedwords.txt"
         if os.path.exists(currentFile):
-            print(f"{currentFile} found")
-            #pass
+            #print(f"{currentFile} found")
+            pass
         else:
             try:
                 open(currentFile, 'a').close()
             except OSError:
-                print(f"Failed to create file {currentFile}")
+                #print(f"Failed to create file {currentFile}")
                 return
             else:
-                print(f"Created file {currentFile}")
+                #print(f"Created file {currentFile}")
+                pass
         if os.path.exists("customLists"):
             if os.path.isfile("customLists"):
-                print("File found where directory should be")
+                #print("File found where directory should be")
                 os.remove("customLists")
                 try:
                     os.mkdir("customLists")
                 except OSError:
-                    print("Failed to create custom list directory")
+                    return
+                    #print("Failed to create custom list directory")
                 else:
-                    print("Created directory")
+                    pass
+                    #print("Created directory")
             elif os.path.isdir("customLists"):
-                print("Found custom lists directory")
+                #print("Found custom lists directory")
+                pass
         else:
             try:
                 os.mkdir("customLists")
             except OSError:
-                print("Failed to create custom list directory")
+                #print("Failed to create custom list directory")
+                return
     games = [
         "Persona 2: Innocent Sin",
         "GUILTY GEAR XX ACCENT CORE PLUS R",
@@ -381,7 +379,9 @@ async def on_ready():
         "Shin Megami Tensei V",
         "Yoshi Commits Tax Fraud",
         "Duck Game",
-        "pressure-vessel-wrapper"
+        "pressure-vessel-wrapper",
+        "kekcroc",
+        "Yu-Gi-Oh! Master Duel"
     ]
     await bot.change_presence(activity=discord.Game(name=f"{random.choice(games)}"))
 
