@@ -226,7 +226,7 @@ async def dragoninstall(ctx):
 ##
 
 @bot.listen()
-async def on_message(message):
+async def on_message(message: discord.Message):
     if message.author.bot:
         return
     if "https://media.discordapp.net" in message.content: # Discord handling
@@ -287,6 +287,7 @@ async def on_message(message):
                     if word in message.content:
                         await message.delete() # Delete the user's message
                         await message.channel.send(f"{message.author.mention} you aren't allowed to say that.")
+                        await message.author.send(f'Your message in {message.guild.name} was deleted for containing "{word}"')
 ##
 ##
 ## DEBUG COMMANDS
