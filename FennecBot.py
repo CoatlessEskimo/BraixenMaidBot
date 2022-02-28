@@ -32,7 +32,7 @@ agplNotice = "FennecBot, a project that will eventually be forked into Free6\nCo
 @bot.command(name='helppls', aliases=['man', '?'])
 async def helppls(message):
     # Send the help message
-    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.26.B)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!addNSFW <arg> - creates a server specific list of links to be filtered if it does not already exists, and adds the argument to the list\n#!rmNSFW <arg> - removes argument from above list\n#!addBadWord <arg> - Creates a server specific list of words/links not allowed to be said in any channel, and adds argument to the list.\n#!rmBadWord <arg> - Removes argument from above list\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
+    await message.channel.send("```\nThis bot manages formatting/filtering links. (Version 2022.02.27.A)\n\nCommands:\n\n#!man - shows the help page.\n#!source - attaches the main .py file for the bot, and a copy of the GNU Affero General Public License v3.\n#!agpl - displays the AGPL notice.\n#!github - shows a link to FennecBot's GitHub repo\n\n#!toggleNSFW - toggles the NSFW filter (enabled by default, requires admin to disable)\n#!addNSFW <arg> - creates a server specific list of links to be filtered if it does not already exists, and adds the argument to the list\n#!rmNSFW <arg> - removes argument from above list\n#!showNSFW - sends list of NSFW links banned in the server to the user\n#!addBadWord <arg> - Creates a server specific list of words/links not allowed to be said in any channel, and adds argument to the list.\n#!rmBadWord <arg> - Removes argument from above list\n#!showBadWords - sends list of bad words banned in the server to the user\n#!toggleYT - toggles the YouTube Shorts formatter (enabled by default, requires admin to disable)\n\nAt this time broken discord embedded links are fixed automatically and cannot be toggled.\n```")
 
 # Gives the user the main source code for the application.
 @bot.command(name='sourceCode', aliases=['source'])
@@ -104,6 +104,24 @@ async def removeBadWord(ctx, *, arg):
             file.truncate()
             await ctx.send("Removed link/word from list.")
 
+@bot.command(name='showNSFWLinks', aliases=['showNSFW'])
+async def showNSFWLinks(ctx):
+    customList = f'customLists/{ctx.guild.id}-NSFW.txt'
+    if ctx.message.author.guild_permissions.administrator:
+        if os.path.exists(customList):
+            with open(customList, 'r') as file:
+                sentCustomList = file.read()
+                try:
+                    await ctx.message.author.send(f'Here is a list of NSFW links from {ctx.guild.name}:\n```\n{sentCustomList}\n```')
+                except Exception:
+                    await ctx.send(f"{ctx.message.author.mention}, I couldn't send you the list. This is because either you cannot accept direct messages, or because the list exists, but is empty.")
+                else:
+                    await ctx.send(f"Sent list of NSFW links to {ctx.message.author.mention}. Check your messages.")
+        else:
+            await ctx.send("There is no NSFW link list. Add a word to get started.")
+    else:
+        await ctx.send("You don't have permission for that {ctx.message.author.mention}.")
+
 @bot.command(name='addBadWord')
 async def addBadWord(ctx, *, arg):
     customList = f'customLists/{ctx.guild.id}-GLOBAL.txt'
@@ -146,6 +164,20 @@ async def removeBadWord(ctx, *, arg):
             file.write(newCustomList)
             file.truncate()
             await ctx.send("Removed link/word from list.")
+
+@bot.command(name='showBadWords', aliases=['lsBadWords'])
+async def showBadWords(ctx):
+    customList = f'customLists/{ctx.guild.id}-GLOBAL.txt'
+    if ctx.message.author.guild_permissions.administrator:
+        if os.path.exists(customList):
+            with open(customList, 'r') as file:
+                sentCustomList = file.read()
+                try:
+                    await ctx.message.author.send(f'Here is a list of bad words from {ctx.guild.name}:\n```\n{sentCustomList}\n```')
+                except Exception:
+                    await ctx.send(f"{ctx.message.author.mention}, I couldn't send you the list. This is because either you cannot accept direct messages, or because the list exists, but is empty.")
+                else:
+                    await ctx.send(f"Sent list of bad words to {ctx.message.author.mention}. Check your messages.")
 
 @bot.command(name='toggleFilterNSFW', aliases=['toggleNSFW'])
 async def toggleFilterNSFW(message):
