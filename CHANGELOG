@@ -1,7 +1,7 @@
 Todo:
 
-- Remove the #!init command as it's really not necessary
 - Consider changing bot NSFW filter behavior to send meme, and then DM the user explaining what they did wrong. Or maybe just DM them a fake IP address. Idk. It'd be funny.
+- Add a level system
 
 2022.02.25.A
 
