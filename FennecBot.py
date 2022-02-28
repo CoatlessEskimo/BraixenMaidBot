@@ -9,6 +9,8 @@ import os
 import random
 import discord
 import hashlib
+import datetime
+import time
 
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -323,6 +325,8 @@ async def on_message(message: discord.Message):
                             await message.author.send(f'Your message in {message.guild.name} was deleted for containing "{word}"')
                         except Exception:
                             pass
+    # LEVELS
+    # Previous levels implementation was hot garbage, replacing it before going any further
 ##
 ##
 ## DEBUG COMMANDS
