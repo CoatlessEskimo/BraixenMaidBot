@@ -52,7 +52,7 @@ async def githubSource(message):
 # Lists debug commands
 @bot.command(name='debugInfo', aliases=['debug'])
 async def debugInfo(ctx):
-    await ctx.send("```\nThis is an incomplete list of commands intended for the bot's HOST only. Please be advised.\n\n#!init - Creates any missing files that need to be created for the bot to function properly. Can avoid headaches while I sort out file checking and permissions.\n#!permission - tells a user whether or not they have admin privileges in a server.\n```")
+    await ctx.send("```\nThis is an incomplete list of commands intended for the bot's HOST only. Please be advised.\n\n#!permission - tells a user whether or not they have admin privileges in a server.\n```")
 
 ##
 ##
@@ -333,30 +333,6 @@ async def on_message(message: discord.Message):
 @commands.has_permissions(administrator = True)
 async def permission(ctx):
     await ctx.send('You have administrator access...')
-
-@bot.command(name='initialize', aliases=['init'])
-@commands.has_permissions(administrator = True)
-async def initialize(message):
-    fileNumber = 0
-    for repeat_count in range(3):
-        fileNumber += 1
-        if fileNumber == 1:
-            currentFile = "nsfwfilter-disabled.txt"
-        elif fileNumber == 2:
-            currentFile = "ytfilter-disabled.txt"
-        elif fileNumber == 3:
-            currentFile = "nsfwlinks.txt"
-        if os.path.exists(currentFile):
-            await message.channel.send(f"{currentFile} already exists! Skipping...")
-            #pass
-        else:
-            try:
-                open(currentFile, 'a').close()
-            except OSError:
-                await message.channel.send(f"Failed to create file {currentFile}! Ask host to check permissions...")
-                return
-            else:
-                await message.channel.send("Created file {currentFile}!")
 
 @bot.event
 async def on_ready():

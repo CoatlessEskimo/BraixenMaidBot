@@ -37,6 +37,10 @@ Todo:
 - Merged first PR to inform user of what bad word they said
 - Handled 403 exception
 
-2022.02.26.A
+2022.02.27.A
 
 - Added #!showNSFW and #!showBadWords, which will DM any administrator a copy of the server's banned words/links list(s)
+
+2022.02.28.A
+
+- Removed #!init
